@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
+import '../../core/widgets/app_shell.dart';
+
 class ContactPage extends StatelessWidget {
   const ContactPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
+    return const AppShell(
+      child: Center(
         child: Text('Contact'),
       ),
     );
