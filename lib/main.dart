@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'core/routing/app_router.dart';
-import 'core/routing/app_routes.dart';
 import 'core/theme/app_theme.dart';
 
 void main() {
@@ -13,12 +12,11 @@ class FlutterPortfolioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Amos Emmanuel | Flutter Developer',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.dark(),
-      initialRoute: AppRoutes.home,
-      onGenerateRoute: AppRouter.onGenerateRoute,
+      routerConfig: AppRouter.router,
     );
   }
 }

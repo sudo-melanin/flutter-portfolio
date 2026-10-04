@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../routing/app_routes.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
+import '../constants/app_breakpoints.dart';
 
 class AppShell extends StatelessWidget {
   const AppShell({
@@ -33,6 +35,9 @@ class _AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile =
+        MediaQuery.sizeOf(context).width < AppBreakpoints.mobile;
+
     return Container(
       decoration: const BoxDecoration(
         border: Border(
@@ -55,24 +60,40 @@ class _AppHeader extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          _NavItem(
-            label: 'Home',
-            route: AppRoutes.home,
-          ),
-          _NavItem(
-            label: 'Projects',
-            route: AppRoutes.projects,
-          ),
-          _NavItem(
-            label: 'Experience',
-            route: AppRoutes.experience,
-          ),
-          _NavItem(
-            label: 'Contact',
-            route: AppRoutes.contact,
-          ),
+          if (isMobile)
+            const _MobileMenuButton()
+          else
+            const _DesktopNavigation(),
         ],
       ),
+    );
+  }
+}
+
+class _DesktopNavigation extends StatelessWidget {
+  const _DesktopNavigation();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        _NavItem(
+          label: 'Home',
+          route: AppRoutes.home,
+        ),
+        _NavItem(
+          label: 'Projects',
+          route: AppRoutes.projects,
+        ),
+        _NavItem(
+          label: 'Experience',
+          route: AppRoutes.experience,
+        ),
+        _NavItem(
+          label: 'Contact',
+          route: AppRoutes.contact,
+        ),
+      ],
     );
   }
 }
@@ -92,10 +113,42 @@ class _NavItem extends StatelessWidget {
       padding: const EdgeInsets.only(left: AppSpacing.lg),
       child: TextButton(
         onPressed: () {
-          Navigator.pushNamed(context, route);
+          context.go(route);
         },
         child: Text(label),
       ),
+    );
+  }
+}
+
+class _MobileMenuButton extends StatelessWidget {
+  const _MobileMenuButton();
+
+  @override
+  Widget build(BuildContext context) {
+    return PopupMenuButton<String>(
+      icon: const Icon(Icons.menu),
+      onSelected: (route) {
+        context.go(route);
+      },
+      itemBuilder: (context) => const [
+        PopupMenuItem(
+          value: AppRoutes.home,
+          child: Text('Home'),
+        ),
+        PopupMenuItem(
+          value: AppRoutes.projects,
+          child: Text('Projects'),
+        ),
+        PopupMenuItem(
+          value: AppRoutes.experience,
+          child: Text('Experience'),
+        ),
+        PopupMenuItem(
+          value: AppRoutes.contact,
+          child: Text('Contact'),
+        ),
+      ],
     );
   }
 }
