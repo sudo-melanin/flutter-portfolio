@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/constants/app_breakpoints.dart';
 import '../../../core/routing/app_routes.dart';
@@ -10,22 +11,17 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile =
-        MediaQuery.sizeOf(context).width < AppBreakpoints.mobile;
+    final isMobile = MediaQuery.sizeOf(context).width < AppBreakpoints.mobile;
 
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.xl,
-        vertical: AppSpacing.section,
+        vertical: AppSpacing.lg,
       ),
       child: Center(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 1100,
-          ),
-          child: isMobile
-              ? const _MobileHero()
-              : const _DesktopHero(),
+          constraints: const BoxConstraints(maxWidth: 1100),
+          child: isMobile ? const _MobileHero() : const _DesktopHero(),
         ),
       ),
     );
@@ -39,15 +35,9 @@ class _DesktopHero extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const Expanded(
-          flex: 3,
-          child: _HeroContent(),
-        ),
+        const Expanded(flex: 3, child: _HeroContent()),
         const SizedBox(width: AppSpacing.xxl),
-        Expanded(
-          flex: 2,
-          child: _HeroVisual(),
-        ),
+        Expanded(flex: 2, child: _HeroVisual()),
       ],
     );
   }
@@ -80,39 +70,37 @@ class _HeroContent extends StatelessWidget {
         Text(
           'Hello, I\'m',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: AppColors.primaryLight,
-                fontWeight: FontWeight.w600,
-              ),
+            color: AppColors.primaryLight,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           'Amos Emmanuel',
           style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                height: 1.1,
-              ),
+            fontWeight: FontWeight.w800,
+            height: 1.1,
+          ),
         ),
         const SizedBox(height: AppSpacing.md),
         Text(
           'Flutter & Dart Developer',
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                color: AppColors.textSecondary,
-                fontWeight: FontWeight.w500,
-              ),
+            color: AppColors.textSecondary,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 620,
-          ),
+          constraints: const BoxConstraints(maxWidth: 620),
           child: Text(
             'I build cross-platform mobile applications with Flutter and Dart, '
             'with a focus on clean architecture, maintainable code and practical '
             'user experiences.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                  height: 1.7,
-                ),
+              color: AppColors.textSecondary,
+              height: 1.7,
+            ),
           ),
         ),
         const SizedBox(height: AppSpacing.xl),
@@ -132,15 +120,11 @@ class _HeroActions extends StatelessWidget {
       runSpacing: AppSpacing.md,
       children: [
         FilledButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.projects);
-          },
+          onPressed: () => context.go(AppRoutes.projects),
           child: const Text('View Projects'),
         ),
         OutlinedButton(
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.contact);
-          },
+          onPressed: () => context.go(AppRoutes.contact),
           child: const Text('Contact Me'),
         ),
       ],
@@ -158,9 +142,7 @@ class _HeroVisual extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        border: Border.all(color: AppColors.border),
       ),
       child: const Center(
         child: Icon(

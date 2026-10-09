@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/widgets/app_shell.dart';
+import 'contact_service.dart';
 
 class ContactPage extends StatefulWidget {
   const ContactPage({super.key});
@@ -18,6 +20,10 @@ class _ContactPageState extends State<ContactPage> {
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
 
+  final _contactService = ContactService();
+
+  bool _isSubmitting = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -26,14 +32,48 @@ class _ContactPageState extends State<ContactPage> {
     super.dispose();
   }
 
-  void _submitForm() {
-    if (_formKey.currentState!.validate()) {
+  Future<void> _submitForm() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _isSubmitting = true;
+    });
+
+    try {
+      await _contactService.sendMessage(
+        name: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+        message: _messageController.text.trim(),
+      );
+
+      if (!mounted) return;
+
+      _nameController.clear();
+      _emailController.clear();
+      _messageController.clear();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Message form validated successfully.'),
+          content: Text('Message sent successfully. Thanks for reaching out!'),
+        ),
+      );
+    } catch (_) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Something went wrong. Please try again.'),
         ),
       );
     }
+
+    if (!mounted) return;
+
+    setState(() {
+      _isSubmitting = false;
+    });
   }
 
   @override
@@ -41,31 +81,27 @@ class _ContactPageState extends State<ContactPage> {
     return AppShell(
       child: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xl,
-          vertical: AppSpacing.section,
+          horizontal: AppSpacing.lg,
+          vertical: AppSpacing.xxl,
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 1000,
-            ),
+            constraints: const BoxConstraints(maxWidth: 1100),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Contact',
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                  'Get in Touch',
+                  style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                const SizedBox(height: AppSpacing.md),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Have a project, opportunity or idea you would like to discuss? '
-                  'Send me a message.',
+                  'Have a project, opportunity or question? Send me a message.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textSecondary,
-                        height: 1.6,
-                      ),
+                    color: AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
                 LayoutBuilder(
@@ -74,14 +110,16 @@ class _ContactPageState extends State<ContactPage> {
 
                     if (isMobile) {
                       return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const _ContactInfo(),
+                          _ContactInfo(),
                           const SizedBox(height: AppSpacing.xxl),
                           _ContactForm(
                             formKey: _formKey,
                             nameController: _nameController,
                             emailController: _emailController,
                             messageController: _messageController,
+                            isSubmitting: _isSubmitting,
                             onSubmit: _submitForm,
                           ),
                         ],
@@ -91,9 +129,7 @@ class _ContactPageState extends State<ContactPage> {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Expanded(
-                          child: _ContactInfo(),
-                        ),
+                        Expanded(child: _ContactInfo()),
                         const SizedBox(width: AppSpacing.xxl),
                         Expanded(
                           child: _ContactForm(
@@ -101,6 +137,7 @@ class _ContactPageState extends State<ContactPage> {
                             nameController: _nameController,
                             emailController: _emailController,
                             messageController: _messageController,
+                            isSubmitting: _isSubmitting,
                             onSubmit: _submitForm,
                           ),
                         ),
@@ -118,78 +155,86 @@ class _ContactPageState extends State<ContactPage> {
 }
 
 class _ContactInfo extends StatelessWidget {
-  const _ContactInfo();
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Let’s connect',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-        ),
-        const SizedBox(height: AppSpacing.md),
-        Text(
-          'I’m open to discussing mobile development opportunities, '
-          'collaborations and interesting projects.',
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.textSecondary,
-                height: 1.7,
-              ),
-        ),
-        const SizedBox(height: AppSpacing.xl),
-        const _ContactItem(
-          icon: Icons.email_outlined,
-          label: 'Email',
-          value: 'amosemma93@gmail.com',
-        ),
-        const SizedBox(height: AppSpacing.md),
-        const _ContactItem(
-          icon: Icons.code,
-          label: 'GitHub',
-          value: 'github.com/sudo-melanin',
-        ),
-        const SizedBox(height: AppSpacing.md),
-        const _ContactItem(
-          icon: Icons.business_center_outlined,
-          label: 'LinkedIn',
-          value: 'linkedin.com/in/amosemma93',
-        ),
-      ],
+    return Container(
+      padding: const EdgeInsets.all(AppSpacing.xl),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Let’s connect',
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            'I’m open to discussing Flutter development opportunities, '
+            'mobile applications and interesting software projects.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: AppColors.textSecondary,
+              height: 1.6,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
+          const _ContactDetail(
+            icon: Icons.email_outlined,
+            label: 'Email',
+            value: 'amosemma93@gmail.com',
+            url: 'mailto:amosemma93@gmail.com',
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          const _ContactDetail(
+            icon: Icons.code_rounded,
+            label: 'GitHub',
+            value: 'sudo-melanin',
+            url: 'https://github.com/sudo-melanin',
+          ),
+          const SizedBox(height: AppSpacing.lg),
+          const _ContactDetail(
+            icon: Icons.link_rounded,
+            label: 'LinkedIn',
+            value: 'Amos Emmanuel',
+            url: 'https://linkedin.com/in/amosemma93',
+          ),
+        ],
+      ),
     );
   }
 }
 
-class _ContactItem extends StatelessWidget {
-  const _ContactItem({
+class _ContactDetail extends StatelessWidget {
+  const _ContactDetail({
     required this.icon,
     required this.label,
     required this.value,
+    this.url,
   });
 
   final IconData icon;
   final String label;
   final String value;
+  final String? url;
+
+  Future<void> _openLink() async {
+    if (url == null) return;
+
+    final uri = Uri.parse(url!);
+    await launchUrl(uri, webOnlyWindowName: '_blank');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(AppSpacing.sm),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceElevated,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Icon(
-            icon,
-            color: AppColors.primaryLight,
-          ),
-        ),
+        Icon(icon, color: AppColors.primaryLight),
         const SizedBox(width: AppSpacing.md),
         Expanded(
           child: Column(
@@ -197,15 +242,24 @@ class _ContactItem extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: AppColors.textSecondary,
+                ),
               ),
               const SizedBox(height: AppSpacing.xs),
-              Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
+              if (url != null)
+                InkWell(
+                  onTap: _openLink,
+                  child: Text(
+                    value,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.primaryLight,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
+                )
+              else
+                Text(value, style: Theme.of(context).textTheme.bodyMedium),
             ],
           ),
         ),
@@ -220,6 +274,7 @@ class _ContactForm extends StatelessWidget {
     required this.nameController,
     required this.emailController,
     required this.messageController,
+    required this.isSubmitting,
     required this.onSubmit,
   });
 
@@ -227,6 +282,7 @@ class _ContactForm extends StatelessWidget {
   final TextEditingController nameController;
   final TextEditingController emailController;
   final TextEditingController messageController;
+  final bool isSubmitting;
   final VoidCallback onSubmit;
 
   @override
@@ -236,83 +292,87 @@ class _ContactForm extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        border: Border.all(color: AppColors.border),
       ),
       child: Form(
         key: formKey,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Send a message',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-            ),
-            const SizedBox(height: AppSpacing.lg),
             TextFormField(
               controller: nameController,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 labelText: 'Name',
                 hintText: 'Your name',
-                border: OutlineInputBorder(),
+                hintStyle: TextStyle(color: AppColors.textSecondary),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your name';
+                  return 'Please enter your name.';
                 }
 
                 return null;
               },
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.lg),
             TextFormField(
               controller: emailController,
               keyboardType: TextInputType.emailAddress,
+              textInputAction: TextInputAction.next,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 hintText: 'you@example.com',
-                border: OutlineInputBorder(),
+                hintStyle: TextStyle(color: AppColors.textSecondary),
               ),
               validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your email';
+                final email = value?.trim() ?? '';
+
+                if (email.isEmpty) {
+                  return 'Please enter your email.';
                 }
 
-                if (!value.contains('@')) {
-                  return 'Please enter a valid email';
+                final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+                if (!emailRegex.hasMatch(email)) {
+                  return 'Please enter a valid email address.';
                 }
 
                 return null;
               },
             ),
-            const SizedBox(height: AppSpacing.md),
+            const SizedBox(height: AppSpacing.lg),
             TextFormField(
               controller: messageController,
-              maxLines: 6,
+              minLines: 6,
+              maxLines: 10,
+              textInputAction: TextInputAction.newline,
               decoration: const InputDecoration(
                 labelText: 'Message',
-                hintText: 'Tell me about your project or opportunity...',
-                border: OutlineInputBorder(),
+                hintText: 'Tell me a little about your project or enquiry.',
+                hintStyle: TextStyle(color: AppColors.textSecondary),
                 alignLabelWithHint: true,
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Please enter a message';
+                  return 'Please enter a message.';
                 }
 
                 return null;
               },
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
             SizedBox(
               width: double.infinity,
-              child: FilledButton.icon(
-                onPressed: onSubmit,
-                icon: const Icon(Icons.send),
-                label: const Text('Send Message'),
+              child: ElevatedButton.icon(
+                onPressed: isSubmitting ? null : onSubmit,
+                icon: isSubmitting
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.send_rounded),
+                label: Text(isSubmitting ? 'Sending...' : 'Send Message'),
               ),
             ),
           ],

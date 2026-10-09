@@ -11,10 +11,7 @@ abstract final class AppRouter {
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const HomePage(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const HomePage()),
       GoRoute(
         path: '/projects',
         builder: (context, state) => const ProjectsPage(),
@@ -25,9 +22,7 @@ abstract final class AppRouter {
           final project = state.extra;
 
           if (project is Project) {
-            return ProjectDetailsPage(
-              project: project,
-            );
+            return ProjectDetailsPage(project: project);
           }
 
           return const ProjectsPage();

@@ -22,7 +22,7 @@ class HomePage extends StatelessWidget {
             FeaturedProjectsSection(),
             ContactCtaSection(),
           ],
-                  ),
+        ),
       ),
     );
   }

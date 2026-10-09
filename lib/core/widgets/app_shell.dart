@@ -7,10 +7,7 @@ import '../theme/app_spacing.dart';
 import '../constants/app_breakpoints.dart';
 
 class AppShell extends StatelessWidget {
-  const AppShell({
-    required this.child,
-    super.key,
-  });
+  const AppShell({required this.child, super.key});
 
   final Widget child;
 
@@ -20,9 +17,7 @@ class AppShell extends StatelessWidget {
       body: Column(
         children: [
           const _AppHeader(),
-          Expanded(
-            child: child,
-          ),
+          Expanded(child: child),
           const _AppFooter(),
         ],
       ),
@@ -35,16 +30,11 @@ class _AppHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isMobile =
-        MediaQuery.sizeOf(context).width < AppBreakpoints.mobile;
+    final isMobile = MediaQuery.sizeOf(context).width < AppBreakpoints.mobile;
 
     return Container(
       decoration: const BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: AppColors.border,
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: AppColors.border)),
       ),
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.xl,
@@ -54,10 +44,7 @@ class _AppHeader extends StatelessWidget {
         children: [
           const Text(
             'AMOS EMMANUEL',
-            style: TextStyle(
-              fontWeight: FontWeight.w700,
-              letterSpacing: 1.2,
-            ),
+            style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1.2),
           ),
           const Spacer(),
           if (isMobile)
@@ -77,32 +64,17 @@ class _DesktopNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _NavItem(
-          label: 'Home',
-          route: AppRoutes.home,
-        ),
-        _NavItem(
-          label: 'Projects',
-          route: AppRoutes.projects,
-        ),
-        _NavItem(
-          label: 'Experience',
-          route: AppRoutes.experience,
-        ),
-        _NavItem(
-          label: 'Contact',
-          route: AppRoutes.contact,
-        ),
+        _NavItem(label: 'Home', route: AppRoutes.home),
+        _NavItem(label: 'Projects', route: AppRoutes.projects),
+        _NavItem(label: 'Experience', route: AppRoutes.experience),
+        _NavItem(label: 'Contact', route: AppRoutes.contact),
       ],
     );
   }
 }
 
 class _NavItem extends StatelessWidget {
-  const _NavItem({
-    required this.label,
-    required this.route,
-  });
+  const _NavItem({required this.label, required this.route});
 
   final String label;
   final String route;
@@ -132,22 +104,10 @@ class _MobileMenuButton extends StatelessWidget {
         context.go(route);
       },
       itemBuilder: (context) => const [
-        PopupMenuItem(
-          value: AppRoutes.home,
-          child: Text('Home'),
-        ),
-        PopupMenuItem(
-          value: AppRoutes.projects,
-          child: Text('Projects'),
-        ),
-        PopupMenuItem(
-          value: AppRoutes.experience,
-          child: Text('Experience'),
-        ),
-        PopupMenuItem(
-          value: AppRoutes.contact,
-          child: Text('Contact'),
-        ),
+        PopupMenuItem(value: AppRoutes.home, child: Text('Home')),
+        PopupMenuItem(value: AppRoutes.projects, child: Text('Projects')),
+        PopupMenuItem(value: AppRoutes.experience, child: Text('Experience')),
+        PopupMenuItem(value: AppRoutes.contact, child: Text('Contact')),
       ],
     );
   }
@@ -161,17 +121,10 @@ class _AppFooter extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: const BoxDecoration(
-        border: Border(
-          top: BorderSide(
-            color: AppColors.border,
-          ),
-        ),
+        border: Border(top: BorderSide(color: AppColors.border)),
       ),
       padding: const EdgeInsets.all(AppSpacing.lg),
-      child: const Text(
-        '© 2026 Amos Emmanuel',
-        textAlign: TextAlign.center,
-      ),
+      child: const Text('© 2026 Amos Emmanuel', textAlign: TextAlign.center),
     );
   }
 }

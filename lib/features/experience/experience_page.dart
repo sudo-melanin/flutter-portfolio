@@ -18,26 +18,24 @@ class ExperiencePage extends StatelessWidget {
         ),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 1000,
-            ),
+            constraints: const BoxConstraints(maxWidth: 1000),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Experience',
                   style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 Text(
                   'A background that combines software development with engineering '
                   'and analytical problem-solving.',
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: AppColors.textSecondary,
-                        height: 1.6,
-                      ),
+                    color: AppColors.textSecondary,
+                    height: 1.6,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xxl),
 
@@ -124,10 +122,7 @@ class ExperiencePage extends StatelessWidget {
 }
 
 class _ExperienceSection extends StatelessWidget {
-  const _ExperienceSection({
-    required this.title,
-    required this.experiences,
-  });
+  const _ExperienceSection({required this.title, required this.experiences});
 
   final String title;
   final List<_ExperienceItem> experiences;
@@ -139,9 +134,9 @@ class _ExperienceSection extends StatelessWidget {
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
         ),
         const SizedBox(height: AppSpacing.lg),
         for (final experience in experiences) ...[
@@ -176,9 +171,7 @@ class _ExperienceItem extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -193,15 +186,15 @@ class _ExperienceItem extends StatelessWidget {
                     Text(
                       role,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w700,
-                          ),
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       company,
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.primaryLight,
-                          ),
+                        color: AppColors.primaryLight,
+                      ),
                     ),
                   ],
                 ),
@@ -209,9 +202,9 @@ class _ExperienceItem extends StatelessWidget {
               const SizedBox(width: AppSpacing.md),
               Text(
                 period,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
               ),
             ],
           ),
@@ -219,16 +212,14 @@ class _ExperienceItem extends StatelessWidget {
           Text(
             description,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppColors.textSecondary,
-                  height: 1.6,
-                ),
+              color: AppColors.textSecondary,
+              height: 1.6,
+            ),
           ),
           const SizedBox(height: AppSpacing.lg),
           for (final highlight in highlights)
             Padding(
-              padding: const EdgeInsets.only(
-                bottom: AppSpacing.sm,
-              ),
+              padding: const EdgeInsets.only(bottom: AppSpacing.sm),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -245,9 +236,9 @@ class _ExperienceItem extends StatelessWidget {
                     child: Text(
                       highlight,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.textSecondary,
-                            height: 1.5,
-                          ),
+                        color: AppColors.textSecondary,
+                        height: 1.5,
+                      ),
                     ),
                   ),
                 ],
@@ -269,18 +260,16 @@ class _WhatIBring extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceElevated,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'What I Bring',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
@@ -290,9 +279,9 @@ class _WhatIBring extends StatelessWidget {
             'the way I approach problem-solving, systems thinking and continuous '
             'improvement in software development.',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                  height: 1.7,
-                ),
+              color: AppColors.textSecondary,
+              height: 1.7,
+            ),
           ),
         ],
       ),
@@ -301,9 +290,7 @@ class _WhatIBring extends StatelessWidget {
 }
 
 class _ExperienceCta extends StatelessWidget {
-  const _ExperienceCta({
-    required this.onPressed,
-  });
+  const _ExperienceCta({required this.onPressed});
 
   final VoidCallback onPressed;
 
@@ -314,24 +301,21 @@ class _ExperienceCta extends StatelessWidget {
         children: [
           Text(
             'Interested in working together?',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w700),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'Let’s talk about your next mobile application.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.lg),
-          FilledButton(
-            onPressed: onPressed,
-            child: const Text('Get in Touch'),
-          ),
+          FilledButton(onPressed: onPressed, child: const Text('Get in Touch')),
         ],
       ),
     );
