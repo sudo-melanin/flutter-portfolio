@@ -55,6 +55,7 @@ abstract final class ProjectsData {
       ],
       status: 'In Progress',
       githubUrl: 'https://github.com/sudo-melanin/npf_officer_hub',
+      apkUrl: 'https://github.com/sudo-melanin/flutter-portfolio/releases/download/v1.0.0/Police-Hub-v1.0.0.apk'
     ),
     Project(
       name: 'AI Background Remover',
